@@ -1,0 +1,16 @@
+
+""" 一些常量选择 """
+
+EMPTY = 0
+BLACK = 1
+WHITE = 2
+INFINITY = 999999999
+WINNER_SCORE = 100000
+MAX = 0
+MIN = 1
+DEFAULT_LEVEL = 2
+HUMAN = "Human"
+COMPUTER = "AI-Minimax"
+AI = "AI-CNN"
+COMBINATION = "Combination"
+
