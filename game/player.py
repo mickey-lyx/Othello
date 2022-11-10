@@ -3,6 +3,12 @@ from model import CNN
 from net_predict import net_predictor
 import torch
 from config import BLACK, WHITE, INFINITY
+import time
+import numpy as np
+# function()   执行的程序
+# time_end = time.clock()  # 记录结束时间
+# time_sum = time_end - time_start  # 计算的时间差为程序的执行时间，单位为秒/s
+# print(time_sum)
 
 
 def change_color(color):
@@ -49,6 +55,7 @@ class Computer(Player):
     def __init__(self, color, level):
         super().__init__(color)
         self.level = level
+        # self.time = []
 
     def get_current_board(self, board):
         self.current_board = board
@@ -70,9 +77,15 @@ class Computer(Player):
             depth = INFINITY
         else:
             depth = self.level + 3
+        # time_start = time.perf_counter()
         self.minimaxObj = Minimax(self.color, stage)
-        return self.minimaxObj.minimax(self.current_board, depth,
-                                       self.color, change_color(self.color))
+        score, board = self.minimaxObj.minimax(self.current_board, depth,
+                                               self.color, change_color(self.color))
+        # time_end = time.perf_counter()  # 记录结束时间
+        # time_sum = time_end - time_start  # 计算的时间差为程序的执行时间，单位为秒/s
+        # self.time.append(time_sum)
+        # print(np.mean(self.time))
+        return score, board
 
 
 class AI(Player):
@@ -84,14 +97,20 @@ class AI(Player):
         # 导入模型参数
         self.net.load_state_dict(torch.load('cnn.params'))
         self.predictor = net_predictor()
+        # self.time = []
 
     def get_current_board(self, board):
         self.current_board = board
 
     def get_move(self):
+        # start_time = time.perf_counter()
         row, column, flag = self.predictor.predict(self.net, self.color, self.current_board)
         # print(row, column)
         self.current_board.apply_move((row, column), self.color)
+        # end_time = time.perf_counter()
+        # sum_time = end_time - start_time
+        # self.time.append(sum_time)
+        # print(f'CNN_time: {np.mean(self.time)}')
         return 0, self.current_board
 
 
@@ -106,18 +125,28 @@ class Combination(Player):
         self.assist = Computer(color, level)
         # 转换阈值prob，当最大的softmax概率输出小于prob时，将控制权转交minimax算法
         self.prob = 0.5
-
+        # self.time = []
     def get_current_board(self, board):
         self.current_board = board
 
     def get_move(self):
+        # start_time = time.perf_counter()
         row, column, flag = self.predictor.predict(self.net, self.color, self.current_board, self.prob)
         # print(row, column)
         # flag用于记录是否使用minimax
         if flag == False:
             self.current_board.apply_move((row, column), self.color)
+            # end_time = time.perf_counter()
+            # sum_time = end_time - start_time
+            # self.time.append(sum_time)
+            # print(f'Combination_time: {np.mean(self.time)}')
             return 0, self.current_board
         else:
             # 调用minimax算法辅助
             Computer.current_board = self.current_board
-            return self.assist.get_move()
+            score, board = self.assist.get_move()
+            # end_time = time.perf_counter()
+            # sum_time = end_time - start_time
+            # self.time.append(sum_time)
+            # print(f'Combination_time: {np.mean(self.time)}')
+            return score, board
