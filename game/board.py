@@ -1,11 +1,12 @@
-
 """ Othello游戏规则和主要逻辑 """
 
 from config import WHITE, BLACK, EMPTY
 from copy import deepcopy
 
+
 class Board:
     """ 游戏规则设定 """
+
     def __init__(self):
         self.board = [[0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0],
@@ -14,15 +15,15 @@ class Board:
                       [0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 0, 0, 0]]     #以列表的形式初始化一个8*8的棋盘对象
+                      [0, 0, 0, 0, 0, 0, 0, 0]]  # 以列表的形式初始化一个8*8的棋盘对象
         self.board[3][4] = BLACK
         self.board[4][3] = BLACK
         self.board[3][3] = WHITE
-        self.board[4][4] = WHITE                    #设置棋盘中心四个点的棋子
-        self.valid_moves = []                       #创建一个有效落子的对象
+        self.board[4][4] = WHITE  # 设置棋盘中心四个点的棋子
+        self.valid_moves = []  # 创建一个有效落子的对象
 
     def __getitem__(self, i, j):
-        return self.board[i][j]                     #返回棋盘上一个位置
+        return self.board[i][j]  # 返回棋盘上一个位置
 
     def lookup(self, row, column, color):
         """ 寻找已知放置位置和颜色的棋子在棋盘8个方向上可以放置一个相同颜色棋子的可能空位
@@ -33,34 +34,34 @@ class Board:
             other = BLACK
         places = []
         if row < 0 or row > 7 or column < 0 or column > 7:
-            return places                       #规定查找范围不能超过棋盘大小
+            return places  # 规定查找范围不能超过棋盘大小
         # 每一个方向都进行遍历搜索，共8个方向
         for (x, y) in [
-                (-1, 0),
-                (-1, 1),
-                (0, 1),
-                (1, 1),
-                (1, 0),
-                (1, -1),
-                (0, -1),
-                (-1, -1)]:
+            (-1, 0),
+            (-1, 1),
+            (0, 1),
+            (1, 1),
+            (1, 0),
+            (1, -1),
+            (0, -1),
+            (-1, -1)]:
             pos = self.check_direction(row, column, x, y, other)
             if pos:
-                places.append(pos)              #若某个方向存在可以放置的空位，将其位置加入列表
+                places.append(pos)  # 若某个方向存在可以放置的空位，将其位置加入列表
         return places
 
     def check_direction(self, row, column, row_add, column_add, other_color):
         """ 检查特定方向上是否存在相同颜色的棋子 """
         i = row + row_add
-        j = column + column_add                 #设定某个探索方向
+        j = column + column_add  # 设定某个探索方向
         if (i >= 0 and j >= 0 and i < 8 and j < 8 and self.board[i][j] == other_color):
             i += row_add
-            j += column_add                     #若选定方向的第一个即为相同颜色的棋子则直接停止，否则继续搜索
+            j += column_add  # 若选定方向的第一个即为相同颜色的棋子则直接停止，否则继续搜索
             while (i >= 0 and j >= 0 and i < 8 and j < 8 and self.board[i][j] == other_color):
                 i += row_add
                 j += column_add
             if (i >= 0 and j >= 0 and i < 8 and j < 8 and self.board[i][j] == EMPTY):
-                return (i, j)                   #直到该方向的直线出现空位，搜索停止
+                return (i, j)  # 直到该方向的直线出现空位，搜索停止
 
     def get_valid_moves(self, color):
         """ 获取某一给定颜色的棋子在棋盘上所有可以落子的位置。
@@ -75,9 +76,9 @@ class Board:
         for i in range(8):
             for j in range(8):
                 if self.board[i][j] == color:
-                    #调用lookup函数寻找各个方向上可以落子的空位
+                    # 调用lookup函数寻找各个方向上可以落子的空位
                     places = places + self.lookup(i, j, color)
-        places = list(set(places))      #对place列表去重并按从小到大排序
+        places = list(set(places))  # 对place列表去重并按从小到大排序
         self.valid_moves = places
         return places
 
@@ -87,7 +88,7 @@ class Board:
         if move in self.valid_moves:
             self.board[move[0]][move[1]] = color
             for i in range(1, 9):
-                self.flip(i, move, color)   #调用flip函数实现每个方向“吃子”
+                self.flip(i, move, color)  # 调用flip函数实现每个方向“吃子”
 
     def flip(self, direction, position, color):
         """ 将两个处于同一直线且颜色相同的棋子之间的颜色不同的棋子的颜色翻转 """
@@ -124,7 +125,7 @@ class Board:
             row_inc = -1
             col_inc = -1
 
-        places = []     # 需要翻转的位置
+        places = []  # 需要翻转的位置
         i = position[0] + row_inc
         j = position[1] + col_inc
 
@@ -162,7 +163,7 @@ class Board:
 
         # 黑子和白子均没有可以继续落子的地方也会结束
         if self.get_valid_moves(BLACK) == [] and \
-        self.get_valid_moves(WHITE) == []:
+                self.get_valid_moves(WHITE) == []:
             return True
         return False
 
@@ -225,6 +226,6 @@ class Board:
         """
         valid_moves = self.get_valid_moves(color)
         for move in valid_moves:
-            newBoard = deepcopy(self)   #深复制完全独立出棋盘
+            newBoard = deepcopy(self)  # 深复制完全独立出棋盘
             newBoard.apply_move(move, color)
             yield newBoard

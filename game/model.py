@@ -1,6 +1,7 @@
 from torch import nn
 import torch.nn.functional as F
 
+
 class CNN(nn.Module):
     """
     由8个卷积层，3个全连接层构成的卷积神经网络
@@ -11,6 +12,7 @@ class CNN(nn.Module):
     使用batch normalization加快收敛
     激活函数为Relu
     """
+
     def __init__(self):
         super(CNN, self).__init__()
         self.conv1 = nn.Conv2d(in_channels=2, out_channels=64, kernel_size=3, stride=1, padding=1)

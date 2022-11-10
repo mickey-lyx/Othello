@@ -4,25 +4,32 @@ from net_predict import net_predictor
 import torch
 from config import BLACK, WHITE, INFINITY
 
+
 def change_color(color):
     if color == BLACK:
         return WHITE
     else:
         return BLACK
 
+
 class Player(object):
     def __init__(self, color):
         self.color = color
+
     def get_move(self):
         raise NotImplementedError
+
     def get_current_board(self, board):
         raise NotImplementedError
 
+
 class Human(Player):
     """人类玩家获取鼠标点击"""
+
     def __init__(self, gui, color="black"):
         super().__init__(color)
         self.gui = gui
+
     def get_move(self):
         validMoves = self.current_board.get_valid_moves(self.color)
         while True:
@@ -38,9 +45,11 @@ class Human(Player):
 
 class Computer(Player):
     """Minimax算法电脑玩家"""
+
     def __init__(self, color, level):
         super().__init__(color)
         self.level = level
+
     def get_current_board(self, board):
         self.current_board = board
 
@@ -64,8 +73,11 @@ class Computer(Player):
         self.minimaxObj = Minimax(self.color, stage)
         return self.minimaxObj.minimax(self.current_board, depth,
                                        self.color, change_color(self.color))
+
+
 class AI(Player):
     """CNN训练的AI"""
+
     def __init__(self, color):
         super().__init__(color)
         self.net = CNN()
@@ -82,8 +94,10 @@ class AI(Player):
         self.current_board.apply_move((row, column), self.color)
         return 0, self.current_board
 
+
 class Combination(Player):
     """Minimax结合深度神经网络"""
+
     def __init__(self, color, level):
         super().__init__(color)
         self.net = CNN()

@@ -2,9 +2,11 @@ import torch
 from config import BLACK
 import torch.nn.functional as F
 
+
 class net_predictor():
     def __init__(self):
         pass
+
     def predict(self, net, color, board, prob=0):
         """
         基于CNN的预测
@@ -18,7 +20,7 @@ class net_predictor():
         for i in range(dim0):
             for j in range(dim1):
                 if X_1[i, j] == 2:
-                     X_1[i, j] = 0
+                    X_1[i, j] = 0
         for i in range(dim0):
             for j in range(dim1):
                 if X_2[i, j] == 1:
@@ -50,5 +52,3 @@ class net_predictor():
         # print(y_max)
         row, column = (y_predict.item() // 8, y_predict.item() % 8)
         return row, column, flag
-
-

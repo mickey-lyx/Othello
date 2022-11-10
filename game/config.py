@@ -1,4 +1,3 @@
-
 """ 一些常量选择 """
 
 EMPTY = 0
@@ -13,4 +12,3 @@ HUMAN = "Human"
 COMPUTER = "AI-Minimax"
 AI = "AI-CNN"
 COMBINATION = "Combination"
-

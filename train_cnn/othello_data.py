@@ -1,4 +1,3 @@
-
 from __future__ import division
 import struct
 import glob
@@ -11,6 +10,7 @@ WHITE = 0
 EMPTY = 1
 BLACK = 2
 SIZE = 8
+
 
 def read_wthor(file_name):
     with open(file_name, mode='rb') as f:
@@ -57,13 +57,14 @@ def get_learning_data(path='wthor_data'):
     np.save('X', X)
     np.save('y', y)
 
+
 def moves2data(true_score, moves):
     """对局信息转换为棋盘和移动数据（通过模拟下棋）"""
     board = othello_simulate.new_board()
     player = othello_simulate.BLACK
-    for i in range(len(moves)-1):
+    for i in range(len(moves) - 1):
         if moves[i] == 0:
-            assert moves[i+1] == 0
+            assert moves[i + 1] == 0
 
     moves = [m for m in moves if m != 0]
     for move in moves:

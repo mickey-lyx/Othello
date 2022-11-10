@@ -5,8 +5,10 @@ from model import CNN
 import matplotlib.pyplot as plt
 from d2l import torch as d2l
 
+
 class Accumulator:
     """在n个变量上累加(自定义累加器)"""
+
     def __init__(self, n):
         self.data = [0.0] * n
 
@@ -19,12 +21,14 @@ class Accumulator:
     def __getitem__(self, idx):
         return self.data[idx]
 
+
 def accuracy(y_hat, y):
     """计算预测正确的数量"""
     if len(y_hat.shape) > 1 and y_hat.shape[1] > 1:
         y_hat = y_hat.argmax(axis=1)
     cmp = y_hat.type(y.dtype) == y
     return float(cmp.type(y.dtype).sum())
+
 
 def evaluate_accuracy_gpu(net, data_iter, device=None):
     """使用GPU计算模型在数据集上的精度"""
@@ -43,6 +47,7 @@ def evaluate_accuracy_gpu(net, data_iter, device=None):
             y = y.to(device)
             metric.add(accuracy(net(X), y), y.numel())
     return metric[0] / metric[1]
+
 
 def train(net, train_iter, test_iter, num_epochs, lr, device):
     """用GPU训练模型"""
@@ -88,6 +93,7 @@ def train(net, train_iter, test_iter, num_epochs, lr, device):
     print(f'{metric[2] * num_epochs / timer.sum():.1f} examples/sec '
           f'on {str(device)}')
 
+
 if __name__ == '__main__':
     batch_size, lr, num_epochs = 128, 1e-2, 12
     train_iter, test_iter = load_data(batch_size)
@@ -100,5 +106,3 @@ if __name__ == '__main__':
     # net.load_state_dict(torch.load('cnn.params'))
     train(net, train_iter, test_iter, num_epochs, lr, d2l.try_gpu())
     plt.show()
-
-

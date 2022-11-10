@@ -1,21 +1,24 @@
 import numpy as np
 from config import INFINITY, WHITE, BLACK
 
+
 def change_color(color):
     if color == BLACK:
         return WHITE
     else:
         return BLACK
 
+
 # 权重矩阵
 Vmap = np.array([[500, -25, 10, 5, 5, 10, -25, 500],
-                    [-25, -45, 1, 1, 1, 1, -45, -25],
-                    [10, 1, 3, 2, 2, 3, 1, 10],
-                    [5, 1, 2, 1, 1, 2, 1, 5],
-                    [5, 1, 2, 1, 1, 2, 1, 5],
-                    [10, 1, 3, 2, 2, 3, 1, 10],
-                    [-25, -45, 1, 1, 1, 1, -45, -25],
-                    [500, -25, 10, 5, 5, 10, -25, 500]])
+                 [-25, -45, 1, 1, 1, 1, -45, -25],
+                 [10, 1, 3, 2, 2, 3, 1, 10],
+                 [5, 1, 2, 1, 1, 2, 1, 5],
+                 [5, 1, 2, 1, 1, 2, 1, 5],
+                 [10, 1, 3, 2, 2, 3, 1, 10],
+                 [-25, -45, 1, 1, 1, 1, -45, -25],
+                 [500, -25, 10, 5, 5, 10, -25, 500]])
+
 
 # 获取稳定点个数
 def getstable(board, color):
@@ -36,7 +39,7 @@ def getstable(board, color):
             stable[0] += 1
             for j in range(1, 7):
                 # 遍历一条边（有角的前提下）
-                if board[cond1[i]+inc1[i] * j][cond2[i]+inc2[i] * j] != color:
+                if board[cond1[i] + inc1[i] * j][cond2[i] + inc2[i] * j] != color:
                     break
                 else:
                     stop[i] = j + 1
@@ -44,8 +47,8 @@ def getstable(board, color):
     # 断了继续数
     for i in range(4):
         if board[cond1[i]][cond2[i]] == color:
-            for j in range(1, 7-stop[i-1]):
-                if board[cond1[i]-inc1[i-1] * j][cond2[i]-inc2[i-1] * j] != color:
+            for j in range(1, 7 - stop[i - 1]):
+                if board[cond1[i] - inc1[i - 1] * j][cond2[i] - inc2[i - 1] * j] != color:
                     break
                 else:
                     stable[1] += 1
@@ -69,7 +72,7 @@ def getstable(board, color):
             jrange = 15 - i
         for j in range(jrange):
             diagsum += abs(board[sind1 - j][sind2 + j])
-        if diagsum == jrange:      # 若整个对角线全满
+        if diagsum == jrange:  # 若整个对角线全满
             for k in range(jrange):
                 # 判定是否为己方颜色，满列和满行则无需判断，后面逻辑与会处理
                 if board[sind1 - k][sind2 + k] == color:
@@ -92,6 +95,7 @@ def getstable(board, color):
                 diag2full[sind1 - k][sind2 - k] = True
     stable[2] = sum(sum(np.logical_and(np.logical_and(np.logical_and(colfull, rowfull), diag1full), diag2full)))
     return stable
+
 
 board = np.array([[0., 0., -1., 0., 0., 0., 0., 1.],
                   [0., 0., -1., 0., 0., 0., -1., 0.],

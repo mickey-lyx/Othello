@@ -1,5 +1,6 @@
 import torch
 from model import CNN
+
 net = CNN()
 net.load_state_dict(torch.load('cnn.params'))
 X_1 = torch.tensor([[0., 0., 0., 0., 0., 0., 0., 0.],
